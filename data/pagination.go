@@ -1,0 +1,40 @@
+package data
+
+import (
+	"github.com/gofiber/fiber/v2"
+	"github.com/munhdalai/go_helper/converter"
+)
+
+// Pagination нь хуудаслалтын мэдээллийг агуулна.
+type Pagination[T any] struct {
+	Offset     int   `json:"-"`
+	PageSize   int   `json:"page_size"`
+	PageNumber int   `json:"page_number"`
+	TotalPage  int64 `json:"total_page"`
+	TotalRow   int64 `json:"total_row"`
+	Items      []T   `json:"items"`
+}
+
+// Paginate нь Fiber context-оос хуудаслалтын мэдээлэл үүсгэнэ.
+// Query parameters: page_size (default: 50), page_number (default: 1)
+func Paginate[T any](c *fiber.Ctx, totalRows int64) *Pagination[T] {
+	pageSize := converter.StringToInt(c.Query("page_size", "50"))
+	pageNumber := converter.StringToInt(c.Query("page_number", "1"))
+
+	if pageSize <= 0 {
+		pageSize = 50
+	}
+	if pageNumber <= 0 {
+		pageNumber = 1
+	}
+
+	offset := pageSize * (pageNumber - 1)
+
+	return &Pagination[T]{
+		PageSize:   pageSize,
+		PageNumber: pageNumber,
+		TotalRow:   totalRows,
+		Offset:     offset,
+		TotalPage:  (totalRows + int64(pageSize) - 1) / int64(pageSize),
+	}
+}
