@@ -10,6 +10,7 @@ type LocalTime time.Time
 
 const localTimeFormat = "2006-01-02 15:04:05"
 
+// UnmarshalJSON нь JSON string-ийг LocalTime руу parse хийнэ.
 func (t *LocalTime) UnmarshalJSON(data []byte) error {
 	parsed, err := time.ParseInLocation(`"`+localTimeFormat+`"`, string(data), time.Local)
 	if err != nil {
@@ -19,6 +20,7 @@ func (t *LocalTime) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON нь LocalTime-ийг JSON string руу хөрвүүлнэ.
 func (t LocalTime) MarshalJSON() ([]byte, error) {
 	b := make([]byte, 0, len(localTimeFormat)+2)
 	b = append(b, '"')
@@ -27,6 +29,7 @@ func (t LocalTime) MarshalJSON() ([]byte, error) {
 	return b, nil
 }
 
+// String нь LocalTime-ийг "2006-01-02 15:04:05" формат руу хөрвүүлнэ.
 func (t LocalTime) String() string {
 	if time.Time(t).IsZero() {
 		return "0000-00-00 00:00:00"
@@ -34,6 +37,7 @@ func (t LocalTime) String() string {
 	return time.Time(t).Format(localTimeFormat)
 }
 
+// Value нь database/sql драйверт утга буцаана.
 func (t LocalTime) Value() (driver.Value, error) {
 	if time.Time(t).IsZero() {
 		return time.Now(), nil
@@ -41,6 +45,7 @@ func (t LocalTime) Value() (driver.Value, error) {
 	return time.Time(t), nil
 }
 
+// Scan нь database-ийн утгыг LocalTime руу уншина.
 func (t *LocalTime) Scan(v interface{}) error {
 	switch vt := v.(type) {
 	case time.Time:

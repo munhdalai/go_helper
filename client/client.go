@@ -20,6 +20,7 @@ type RequestError struct {
 	Err          error
 }
 
+// Error нь алдааны мэдээллийг string болгон буцаана (error interface).
 func (r *RequestError) Error() string {
 	return fmt.Sprintf("status %d: err %v", r.StatusCode, r.Err)
 }

@@ -91,26 +91,32 @@ func InitLogger(logLevel string, logFile string, isProd bool) error {
 	return nil
 }
 
+// Info нь info түвшний лог бичнэ.
 func Info(message string, fields ...zap.Field) {
 	globalLogger.Info(message, fields...)
 }
 
+// Debug нь debug түвшний лог бичнэ.
 func Debug(message string, fields ...zap.Field) {
 	globalLogger.Debug(message, fields...)
 }
 
+// Error нь error түвшний лог бичнэ.
 func Error(message string, fields ...zap.Field) {
 	globalLogger.Error(message, fields...)
 }
 
+// Warn нь warning түвшний лог бичнэ.
 func Warn(message string, fields ...zap.Field) {
 	globalLogger.Warn(message, fields...)
 }
 
+// Fatal нь fatal түвшний лог бичнэ. Програм зогсоно.
 func Fatal(message string, fields ...zap.Field) {
 	globalLogger.Fatal(message, fields...)
 }
 
+// NewSugar нь нэртэй SugaredLogger үүсгэнэ.
 func NewSugar(name string) *zap.SugaredLogger {
 	return globalLogger.Named(name).Sugar()
 }
